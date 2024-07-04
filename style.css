@@ -102,6 +102,14 @@ body {
     animation: 5s linear 1 counting;
 }
 
+.time {
+    font-size: 50px;
+    color: white;
+    position: absolute;
+    top: 20px;
+    right: 20px;
+}
+
 @keyframes flash {
     0% {
         background-image: url('images/left.jpg');

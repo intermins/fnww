@@ -5,6 +5,8 @@ let tutorial = true;
 let flash_interval = true;
 let flash_count = 3;
 
+let time = 0;
+
 function play(src) {
     let sound = new Audio();
     sound.preload = 'auto';
@@ -70,3 +72,12 @@ document.addEventListener('keydown', (e)=>{
             break;
     }
 })
+
+let time_walk = setInterval(() => {
+    time++;
+    if(time < 6) {
+        document.getElementById('time').innerHTML = time;
+    } else {
+        clearInterval(time_walk)
+    }
+}, 75000)

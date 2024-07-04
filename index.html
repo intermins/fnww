@@ -8,11 +8,18 @@
 </head>
 <body>
     <section class="backBox">
-        <div class="backContainer" style="background-image: url('images/left.jpg');"></div>
+        <div class="backContainer" style="background-image: url('images/left\ default.jpg');" id="left_f"></div>
         <div class="backContainer" style="background-image: url('images/right.jpg');"></div>
     </section>
     <div class="moveSensor" id="left"></div>
     <div class="moveSensor right none" id="right"></div>
+
+    <div class="tutorial hidden">Space to Flash</div>
+
+    <div class="flash-battery">
+        <span id="count_flash">3</span>
+        <div class="bar"></div>
+    </div>
 
     <script src="jquery-3.6.4.min.js"></script>
     <script src="script.js"></script>

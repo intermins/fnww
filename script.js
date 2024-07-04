@@ -3,7 +3,9 @@ const backBox = document.querySelector('.backBox');
 let status = true;
 let tutorial = true;
 let flash_interval = true;
-let flash_count = 3;
+let flash_count = 20;
+
+document.getElementById('count_flash').innerHTML = flash_count;
 
 let time = 0;
 

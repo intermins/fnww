@@ -1,9 +1,12 @@
 const backBox = document.querySelector('.backBox');
 
 let status = true;
+let camera_status = false;
 let tutorial = true;
 let flash_interval = true;
 let flash_count = 20;
+
+let camera_open_limiter = true;
 
 document.getElementById('count_flash').innerHTML = flash_count;
 
@@ -45,12 +48,14 @@ document.querySelectorAll('.moveSensor').forEach((e)=>{
             if(tutorial) {
                 document.querySelector('.tutorial').classList.remove('hidden');
             }
+            document.querySelector('.cameraSensor').classList.add('cameraSensorOut')
             play('sounds/moveLeft.mp3');
             status = false;
             f.target.classList.add('none');
             document.getElementById('right').classList.remove('none')
             backBox.classList.toggle('moved');
         } else {
+            document.querySelector('.cameraSensor').classList.remove('cameraSensorOut')
             document.querySelector('.tutorial').classList.add('hidden')
             play('sounds/moveRight.mp3')
             status = true;
@@ -91,5 +96,25 @@ document.addEventListener('keydown', (e)=>{
             break;
         default:
             break;
+    }
+})
+
+document.querySelector('.cameraSensor').addEventListener('click', (e)=>{
+    if(!camera_status && camera_open_limiter) {
+        camera_open_limiter = false;
+        setTimeout(() => {
+            camera_open_limiter = true;
+        }, 300)
+        camera_status = true;
+        play('sounds/camera_open.mp3')
+        document.querySelector('.camera').classList.toggle('camera-close')
+    } else if(camera_status && camera_open_limiter) {
+        camera_open_limiter = false;
+        setTimeout(() => {
+            camera_open_limiter = true;
+        }, 300)
+        camera_status = false;
+        play('sounds/camera_close.mp3')
+        document.querySelector('.camera').classList.toggle('camera-close')
     }
 })

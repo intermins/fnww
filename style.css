@@ -29,6 +29,9 @@ body {
     height: 100vh;
     background-position: center;
     background-size: cover;
+    position: relative;
+    display: flex;
+    justify-content: center;
 }
 .moveSensor {
     width: 7%;
@@ -65,13 +68,13 @@ body {
     border: 3px solid white;
     backdrop-filter: blur(4px);
     left: 20px;
-    bottom: 20px;
+    top: 20px;
     font-size: 30px;
     transition: 0.2s;
     color: white;
 }
 .hidden {
-    transform: translateY(200%);
+    transform: translateY(-200%);
 }
 .flashed {
     animation: 2s ease 1 flash;
@@ -107,6 +110,7 @@ body {
     width: 100%;
     height: 100%;
     background: rgb(255, 255, 255);
+    transition: 0.1s;
 }
 .battery_counting {
     animation: 5s linear 1 counting;
@@ -211,8 +215,8 @@ body {
     z-index: 20;
     width: 100vw;
     height: 100vh;
-    background: rgb(124, 118, 118);
-    box-shadow: inset 0px 0px 100px black;
+    background: rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 100px rgb(0, 0, 0);
     transition: 0.4s;
 }
 .camera-close {
@@ -221,6 +225,59 @@ body {
 .cameraSensorOut {
     transform: translateX(200%);
 }
+.cameras-map {
+    position: absolute;
+    top: 200px;
+    right: 100px;
+    width: 30vw;
+    height: 30vw;
+    background-image: url('images/map.png');
+    background-size: auto 90%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.ventilation {
+    width: 350px;
+    height: 250px;
+    background-image: url('images/ventilation default.jpg');
+    background-position: center;
+    background-size: cover;
+    border-radius: 10px;
+    position: absolute;
+    top: 15vh;
+    overflow: hidden;
+}
+.vent-door {
+    width: 100%;
+    height: 100%;
+    background-image: url('images/vent-door.jpg');
+    background-size: cover;
+    transition: 2s;
+}
+.vent-open {
+    transform: translateY(-100%);
+}
+.oxygen {
+    width: 200px;
+    height: 60px;
+    border: 2px solid white;
+    position: absolute;
+    bottom: 20px;
+    left: 20px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+.oxygen::before {
+    content: '';
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background-image: url('images/oxygen.png');
+    background-size: cover;
+    left: 60px;
+    bottom: 3.5px;
+}
+
 @keyframes flash {
     0% {
         background-image: url('images/left.jpg');

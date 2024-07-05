@@ -9,7 +9,11 @@
 <body>
     <section class="backBox">
         <div class="backContainer" style="background-image: url('images/left\ default.jpg');" id="left_f"></div>
-        <div class="backContainer" style="background-image: url('images/right.jpg');"></div>
+        <div class="backContainer" style="background-image: url('images/right.jpg');">
+            <div class="ventilation">
+                <div class="vent-door vent-open"></div>
+            </div>
+        </div>
     </section>
     <div class="moveSensor" id="left"></div>
     <div class="moveSensor right none" id="right"></div>
@@ -18,7 +22,7 @@
 
     <div class="flash-battery">
         <span id="count_flash">3</span>
-        <div class="bar"></div>
+        <div class="bar" id="flash_bar"></div>
     </div>
 
     <div class="time"><span id="time">12</span> AM</div>
@@ -42,9 +46,14 @@
 
     <div class="cameraSensor"></div>
 
-    <div class="camera camera-close"></div>
+    <div class="camera camera-close">
+        <div class="cameras-map"></div>
+    </div>
 
-    <script src="jquery-3.6.4.min.js"></script>
+    <div class="oxygen">
+        <div class="bar" id="oxygen_bar"></div>
+    </div>
+
     <script src="script.js"></script>
 </body>
 </html>

@@ -3,9 +3,13 @@ const backBox = document.querySelector('.backBox');
 let status = true;
 let camera_status = false;
 let tutorial = true;
+let vent_tutorial = true;
 let flash_interval = true;
-let flash_count = 20;
+let flash_count = 5;
+let vent_status = false;
+let oxygen = 100;
 
+let vent_door_limiter = true;
 let camera_open_limiter = true;
 
 document.getElementById('count_flash').innerHTML = flash_count;
@@ -25,7 +29,13 @@ function rand(min, max) {
 function start() {
     document.querySelector('.start').classList.add('out');
     setTimeout(() => {
-        play('sounds/atmosphere.mp3')
+        let atmosphere = document.createElement('audio');
+        atmosphere.preload = 'auto';
+        atmosphere.loop = 'true';
+        atmosphere.src = 'sounds/atmosphere.mp3'
+        atmosphere.id = 'atmosphere';
+        atmosphere.play();
+        document.body.appendChild(atmosphere)
     }, 2000)
     let time_walk = setInterval(() => {
         time++;
@@ -37,9 +47,25 @@ function start() {
             setTimeout(() => {
                 document.getElementById('box').classList.add('endofnight');
             }, 3000);
+            document.getElementById('atmosphere').remove()
             clearInterval(time_walk)
         }
-    }, 75000)
+    }, 75000);
+    let vallet_check = setInterval(() => {
+        if(vent_status) {
+            oxygen -= 1;
+        } else {
+            oxygen += 2
+        }
+        if(oxygen > 100) {
+            oxygen = 100;
+        }
+        if(oxygen < 0) {
+            oxygen = 0;
+        }
+        document.querySelector('#oxygen_bar').style.width = `${oxygen}%`
+    }, 80)
+
 }
 
 document.querySelectorAll('.moveSensor').forEach((e)=>{
@@ -55,8 +81,12 @@ document.querySelectorAll('.moveSensor').forEach((e)=>{
             document.getElementById('right').classList.remove('none')
             backBox.classList.toggle('moved');
         } else {
-            document.querySelector('.cameraSensor').classList.remove('cameraSensorOut')
             document.querySelector('.tutorial').classList.add('hidden')
+            if(vent_tutorial) {
+                document.querySelector('.tutorial').innerHTML = 'Enter to close vent'
+                document.querySelector('.tutorial').classList.remove('hidden');
+            }
+            document.querySelector('.cameraSensor').classList.remove('cameraSensorOut')
             play('sounds/moveRight.mp3')
             status = true;
             f.target.classList.add('none');
@@ -74,9 +104,9 @@ document.addEventListener('keydown', (e)=>{
                 flash_count--;
                 document.getElementById('count_flash').innerHTML = flash_count;
                 if(flash_count > 0) {
-                    document.querySelector('.bar').classList.add('battery_counting')
+                    document.querySelector('#flash_bar').classList.add('battery_counting')
                 }  else {
-                    document.querySelector('.bar').style.width = '0%';
+                    document.querySelector('#flash_bar').style.width = '0%';
                 }
                 tutorial = false;
                 document.getElementById('left_f').classList.add('flashed');
@@ -90,8 +120,31 @@ document.addEventListener('keydown', (e)=>{
                     if(flash_count > 0) {
                         play('sounds/flash_battery.mp3');
                     }
-                    document.querySelector('.bar').classList.remove('battery_counting')
+                    document.querySelector('#flash_bar').classList.remove('battery_counting')
                 }, 5000)
+            }
+            break;
+        case 'Enter':
+            if(status && vent_door_limiter) {
+                vent_tutorial = false;
+                vent_door_limiter = false;
+                setTimeout(() => {
+                    vent_door_limiter = true;
+                }, 2000)
+                document.querySelector('.tutorial').classList.add('hidden')
+                if(!vent_status) {
+                    setTimeout(() => {
+                        vent_status = true;
+                    }, 2000)
+                    play('sounds/vent-up.mp3');
+                    document.querySelector('.vent-door').classList.toggle('vent-open')
+                } else {
+                    setTimeout(() => {
+                        vent_status = false;
+                    }, 2000)
+                    play('sounds/vent-up.mp3');
+                    document.querySelector('.vent-door').classList.toggle('vent-open')
+                }
             }
             break;
         default:

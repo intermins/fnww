@@ -19,6 +19,25 @@ function play(src) {
 function rand(min, max) {
     return min + Math.floor(Math.random() * (max-min)) 
 }
+function start() {
+    document.querySelector('.start').classList.add('out');
+    setTimeout(() => {
+        play('sounds/atmosphere.mp3')
+    }, 2000)
+    let time_walk = setInterval(() => {
+        time++;
+        if(time < 6) {
+            document.getElementById('time').innerHTML = time;
+        } else {
+            play('sounds/endOfNight.mp3');
+            document.querySelector('.end').classList.add('get');
+            setTimeout(() => {
+                document.getElementById('box').classList.add('endofnight');
+            }, 3000);
+            clearInterval(time_walk)
+        }
+    }, 75000)
+}
 
 document.querySelectorAll('.moveSensor').forEach((e)=>{
     e.addEventListener('click', (f)=>{
@@ -74,12 +93,3 @@ document.addEventListener('keydown', (e)=>{
             break;
     }
 })
-
-let time_walk = setInterval(() => {
-    time++;
-    if(time < 6) {
-        document.getElementById('time').innerHTML = time;
-    } else {
-        clearInterval(time_walk)
-    }
-}, 75000)

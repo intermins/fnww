@@ -119,7 +119,70 @@ body {
     top: 20px;
     right: 20px;
 }
-
+.end {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 2s;
+    color: white;
+    font-size: 60px;
+    opacity: 0;
+    z-index: -10;
+}
+.timeEnd {
+    overflow: hidden;
+    width: 40px;
+    height: 60px;
+}
+#box {
+    transition: 2s ease;
+    display: flex;
+    flex-direction: column;
+}
+.endofnight {
+    transform: translateY(-51%);
+}
+.get {
+    opacity: 1;
+    z-index: 40;
+}
+.start {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 60px;
+}
+.out {
+    opacity: 0;
+    z-index: -10;
+}
+.start-btn {
+    position: absolute;
+    bottom: 40px;
+    right: 40px;
+    border: 2px solid white;
+    padding: 10px;
+    font-size: 40px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+.start-btn:hover {
+    color: black;
+    background: white;
+}
 @keyframes flash {
     0% {
         background-image: url('images/left.jpg');

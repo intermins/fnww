@@ -122,6 +122,7 @@ body {
     position: absolute;
     top: 20px;
     right: 20px;
+    z-index: 30
 }
 .end {
     position: absolute;
@@ -216,8 +217,9 @@ body {
     width: 100vw;
     height: 100vh;
     background: rgb(0, 0, 0);
-    box-shadow: inset 0px 0px 100px rgb(0, 0, 0);
+    box-shadow: inset 0px 0px 1000px rgb(0, 0, 0);
     transition: 0.4s;
+    background: url('images/camera_decor.png') center left / 50% no-repeat, url('images/k3.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover;
 }
 .camera-close {
     transform: translateX(100%);
@@ -276,6 +278,50 @@ body {
     background-size: cover;
     left: 60px;
     bottom: 3.5px;
+}
+.camera-btn {
+    width: 90px;
+    height: 50px;
+    background: rgb(139, 139, 139);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 30px;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    position: absolute;
+    border: 3px solid grey;
+    transition: 0.3s;
+}
+.activated-camera {
+    background: rgba(255, 255, 255, 1);
+    color: black;
+}
+#k1 {
+    top: 3%;
+    left: 7%;
+}
+#k2 {
+    top: 26%;
+    left: 38%;
+}
+#k3 {
+    top: 12%;
+    left: 63%;
+}
+#k4 {
+    top: 52%;
+    left: 23%;
+}
+#k5 {
+    top: 70%;
+    left: 10%;
+}
+#k6 {
+    top: 67%;
+    left: 78%;
 }
 
 @keyframes flash {

@@ -5,9 +5,10 @@ let camera_status = false;
 let tutorial = true;
 let vent_tutorial = true;
 let flash_interval = true;
-let flash_count = 5;
+let flash_count = 20;
 let vent_status = false;
 let oxygen = 100;
+let active_camera = 'k3';
 
 let vent_door_limiter = true;
 let camera_open_limiter = true;
@@ -36,7 +37,7 @@ function start() {
         atmosphere.id = 'atmosphere';
         atmosphere.play();
         document.body.appendChild(atmosphere)
-    }, 2000)
+    }, 1000)
     let time_walk = setInterval(() => {
         time++;
         if(time < 6) {
@@ -55,7 +56,7 @@ function start() {
         if(vent_status) {
             oxygen -= 1;
         } else {
-            oxygen += 2
+            oxygen += 0.4
         }
         if(oxygen > 100) {
             oxygen = 100;
@@ -72,6 +73,7 @@ document.querySelectorAll('.moveSensor').forEach((e)=>{
     e.addEventListener('click', (f)=>{
         if(f.target.id == 'left') {
             if(tutorial) {
+                document.querySelector('.tutorial').innerHTML = 'Space to Flash'
                 document.querySelector('.tutorial').classList.remove('hidden');
             }
             document.querySelector('.cameraSensor').classList.add('cameraSensorOut')
@@ -125,7 +127,7 @@ document.addEventListener('keydown', (e)=>{
             }
             break;
         case 'Enter':
-            if(status && vent_door_limiter) {
+            if(status && vent_door_limiter && !camera_status) {
                 vent_tutorial = false;
                 vent_door_limiter = false;
                 setTimeout(() => {
@@ -141,7 +143,7 @@ document.addEventListener('keydown', (e)=>{
                 } else {
                     setTimeout(() => {
                         vent_status = false;
-                    }, 2000)
+                    }, 200)
                     play('sounds/vent-up.mp3');
                     document.querySelector('.vent-door').classList.toggle('vent-open')
                 }
@@ -170,4 +172,14 @@ document.querySelector('.cameraSensor').addEventListener('click', (e)=>{
         play('sounds/camera_close.mp3')
         document.querySelector('.camera').classList.toggle('camera-close')
     }
+})
+
+document.querySelectorAll('.camera-btn').forEach((e) => {
+    e.addEventListener('click', (e) => {
+        play('sounds/nextCamera.mp3');
+        document.getElementById(active_camera).classList.remove('activated-camera');
+        e.target.classList.add('activated-camera');
+        active_camera = e.target.id;
+        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+    })
 })

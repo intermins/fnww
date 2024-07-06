@@ -8,10 +8,31 @@ let flash_interval = true;
 let flash_count = 20;
 let vent_status = false;
 let oxygen = 100;
-let active_camera = 'k3';
+let active_camera = 'k1';
+let move_chance = 4;
+let wait_time = 10;
+
+let positions = {};
+let steps = {};
+
+positions['w'] = 'k6';
+steps['w'] = 1;
+
+let graph = {};
+
+graph['k6'] = 'k5';
+graph['k5'] = 'k4';
+graph['k4'] = 'player';
+graph['k1'] = 'k3';
+graph['k2'] = 'k4';
+graph['player'] = 'player'
 
 let vent_door_limiter = true;
 let camera_open_limiter = true;
+
+let time_walk;
+let vallet_check;
+let loop;
 
 document.getElementById('count_flash').innerHTML = flash_count;
 
@@ -38,7 +59,7 @@ function start() {
         atmosphere.play();
         document.body.appendChild(atmosphere)
     }, 1000)
-    let time_walk = setInterval(() => {
+    time_walk = setInterval(() => {
         time++;
         if(time < 6) {
             document.getElementById('time').innerHTML = time;
@@ -50,9 +71,11 @@ function start() {
             }, 3000);
             document.getElementById('atmosphere').remove()
             clearInterval(time_walk)
+            clearInterval(vallet_check)
+            clearInterval(loop)
         }
     }, 75000);
-    let vallet_check = setInterval(() => {
+    vallet_check = setInterval(() => {
         if(vent_status) {
             oxygen -= 1;
         } else {
@@ -66,7 +89,39 @@ function start() {
         }
         document.querySelector('#oxygen_bar').style.width = `${oxygen}%`
     }, 80)
-
+    loop = setInterval(() => {
+        Object.keys(positions).forEach((key) => {
+            if(rand(0, move_chance) == Math.floor(move_chance/2) && positions[key] != 'player') {
+                if(steps[key] < 2) {
+                    steps[key]++;
+                } else {
+                    steps[key] = 1;
+                    positions[key] = graph[positions[key]]
+                }
+                if(active_camera == positions[key]) {
+                    addition = ''
+                    addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                    document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                } else {
+                    document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                }
+                if(positions['w'] == 'player') {
+                    setTimeout(() => {
+                        if(positions['w'] == 'player') {
+                            over();
+                        }
+                    }, wait_time*1000)
+                }
+            }
+        })
+    }, 3000);
+}
+function over() {
+    clearInterval(time_walk)
+    clearInterval(vallet_check)
+    clearInterval(loop)
+    document.getElementById('atmosphere').remove()
+    document.body.style.display = 'none';
 }
 
 document.querySelectorAll('.moveSensor').forEach((e)=>{
@@ -103,6 +158,19 @@ document.addEventListener('keydown', (e)=>{
         case ' ':
             if(!status && flash_interval && flash_count > 0) {
                 play('sounds/flash.mp3');
+                if(positions['w'] == 'player') {
+                    play('sounds/scream.mp3');
+                    document.querySelector('.wednesday_box').classList.remove('none');
+                    setTimeout(() => {
+                        document.querySelector('.wednesday').classList.add('wednesday_run');
+                        positions['w'] = 'k6';
+                        steps['w'] = 1
+                    }, 200);
+                    setTimeout(() => {
+                        document.querySelector('.wednesday_box').classList.add('none');
+                        document.querySelector('.wednesday').classList.remove('wednesday_run')
+                    }, 2000);
+                }
                 flash_count--;
                 document.getElementById('count_flash').innerHTML = flash_count;
                 if(flash_count > 0) {
@@ -180,6 +248,12 @@ document.querySelectorAll('.camera-btn').forEach((e) => {
         document.getElementById(active_camera).classList.remove('activated-camera');
         e.target.classList.add('activated-camera');
         active_camera = e.target.id;
-        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+        addition = '';
+        Object.keys(positions).forEach((key)=>{
+            if(positions[key] == e.target.id) {
+                addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+            }
+        })
+        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
     })
 })

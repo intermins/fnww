@@ -346,6 +346,20 @@ body {
     transform: scale(0.5);
     opacity: 0;
 }
+.dead_soul {
+    width: 700px;
+    height: 700px;
+    background-image: url('images/dead_soul.png');
+    background-size: auto 100%;
+    background-position: center;
+    position: absolute;
+    transition: 0.2s;
+    bottom: 0;
+}
+.dead_soul-run {
+    opacity: 0;
+    transform: translateY(100%);
+}
 
 @keyframes flash {
     0% {

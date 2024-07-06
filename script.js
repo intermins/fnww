@@ -10,13 +10,18 @@ let vent_status = false;
 let oxygen = 100;
 let active_camera = 'k1';
 let move_chance = 4;
-let wait_time = 10;
+let wednesday_wait_time = 10;
+let thing_wait_time = 8;
+let dead_soul_chance = 10;
+let dead_soul = false;
 
 let positions = {};
 let steps = {};
 
 positions['w'] = 'k6';
 steps['w'] = 1;
+positions['t'] = 'k1';
+steps['t'] = 1;
 
 let graph = {};
 
@@ -25,6 +30,7 @@ graph['k5'] = 'k4';
 graph['k4'] = 'player';
 graph['k1'] = 'k3';
 graph['k2'] = 'k4';
+graph['k3'] = 'player';
 graph['player'] = 'player'
 
 let vent_door_limiter = true;
@@ -103,7 +109,13 @@ function start() {
                     addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
                     document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
                 } else {
-                    document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                    addition = '';
+                    Object.keys(positions).forEach((key)=>{
+                        if(positions[key] == active_camera) {
+                            addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                        }
+                    })
+                    document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
                 }
                 if(positions['w'] == 'player') {
                     setTimeout(() => {
@@ -112,8 +124,28 @@ function start() {
                         }
                     }, wait_time*1000)
                 }
+                if(positions['t'] == 'player') {
+                    setTimeout(() => {
+                        if(!vent_status) {
+                            over();
+                        } else {
+                            play('sounds/thing_run.mp3')
+                            positions['t'] = 'k1'
+                            steps['t'] = 1
+                        }
+                    }, thing_wait_time * 1000)
+                }
             }
         })
+        if(status && rand(0, dead_soul_chance) == Math.floor(dead_soul_chance/2) && !dead_soul) {
+            document.querySelector('.dead_soul').classList.remove('none');
+            dead_soul = true;
+            setTimeout(() => {
+                if(dead_soul) {
+                    over();
+                }
+            }, dead_soul_wait_time * 1000)
+        }
     }, 3000);
 }
 function over() {
@@ -158,6 +190,17 @@ document.addEventListener('keydown', (e)=>{
         case ' ':
             if(!status && flash_interval && flash_count > 0) {
                 play('sounds/flash.mp3');
+                if(dead_soul) {
+                    dead_soul = false;
+                    play('sounds/scream.mp3');
+                    setTimeout(() => {
+                        document.querySelector('.dead_soul').classList.add('dead_soul-run');
+                    }, 200)
+                    setTimeout(() => {
+                        document.querySelector('.dead_soul').classList.add('none');
+                        document.querySelector('.dead_soul').classList.remove('dead_soul-run')
+                    }, 400);
+                }
                 if(positions['w'] == 'player') {
                     play('sounds/scream.mp3');
                     document.querySelector('.wednesday_box').classList.remove('none');

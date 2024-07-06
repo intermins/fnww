@@ -85,7 +85,7 @@ function start() {
     }, 75000);
     vallet_check = setInterval(() => {
         if(vent_status) {
-            oxygen -= 1;
+            oxygen -= 0.7;
         } else {
             oxygen += 0.4
         }
@@ -94,6 +94,7 @@ function start() {
         }
         if(oxygen < 0) {
             oxygen = 0;
+            over('oxygen')
         }
         document.querySelector('#oxygen_bar').style.width = `${oxygen}%`
     }, 80)
@@ -202,7 +203,10 @@ function over(screamer) {
         case 'thing':
             document.querySelector('.scream-thing').classList.remove('hidden_thing')
             document.querySelector('.hint').innerHTML = 'Закрывайте вентиляцию перед вещью!'
-            break
+            break;
+        case 'oxygen':
+            document.querySelector('.hint').innerHTML = 'Следите за кислородом!'
+            break;
         default:
             break;
     }

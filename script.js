@@ -5,7 +5,7 @@ let camera_status = false;
 let tutorial = true;
 let vent_tutorial = true;
 let flash_interval = true;
-let flash_count = 8;
+let flash_count = 10;
 let vent_status = false;
 let oxygen = 100;
 let active_camera = 'k3';
@@ -13,9 +13,11 @@ let move_chance = 10;
 let thing_move_chance = 10;
 let wednesday_wait_time = 15;
 let thing_wait_time = 8;
-let dead_soul_chance = 20;
+let dead_soul_chance = 35;
 let dead_soul = false;
 let dead_soul_wait_time = 15;
+
+let win = false;
 
 let positions = {};
 let steps = {};
@@ -81,6 +83,7 @@ function start() {
             clearInterval(time_walk)
             clearInterval(vallet_check)
             clearInterval(loop)
+            win = true;
         }
     }, 75000);
     vallet_check = setInterval(() => {
@@ -94,7 +97,9 @@ function start() {
         }
         if(oxygen < 0) {
             oxygen = 0;
-            over('oxygen')
+            if(!win) {
+                over('oxygen')
+            }
         }
         document.querySelector('#oxygen_bar').style.width = `${oxygen}%`
     }, 80)
@@ -123,7 +128,7 @@ function start() {
                     }
                     if(positions['w'] == 'player') {
                         setTimeout(() => {
-                            if(positions['w'] == 'player') {
+                            if(positions['w'] == 'player' && !win) {
                                 over('wednesday');
                             }
                         }, wednesday_wait_time*1000)
@@ -151,7 +156,7 @@ function start() {
                     }
                     if(positions['t'] == 'player') {
                         setTimeout(() => {
-                            if(!vent_status) {
+                            if(!vent_status && !win) {
                                 over('thing');
                             } else {
                                 play('sounds/thing_run.mp3')
@@ -167,7 +172,7 @@ function start() {
             document.querySelector('.dead_soul').classList.remove('none');
             dead_soul = true;
             setTimeout(() => {
-                if(dead_soul) {
+                if(dead_soul && !win) {
                     over('dead soul');
                 }
             }, dead_soul_wait_time * 1000)

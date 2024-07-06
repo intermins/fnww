@@ -5,15 +5,17 @@ let camera_status = false;
 let tutorial = true;
 let vent_tutorial = true;
 let flash_interval = true;
-let flash_count = 20;
+let flash_count = 8;
 let vent_status = false;
 let oxygen = 100;
-let active_camera = 'k1';
-let move_chance = 4;
-let wednesday_wait_time = 10;
+let active_camera = 'k3';
+let move_chance = 10;
+let thing_move_chance = 10;
+let wednesday_wait_time = 15;
 let thing_wait_time = 8;
-let dead_soul_chance = 10;
+let dead_soul_chance = 20;
 let dead_soul = false;
+let dead_soul_wait_time = 15;
 
 let positions = {};
 let steps = {};
@@ -97,43 +99,66 @@ function start() {
     }, 80)
     loop = setInterval(() => {
         Object.keys(positions).forEach((key) => {
-            if(rand(0, move_chance) == Math.floor(move_chance/2) && positions[key] != 'player') {
-                if(steps[key] < 2) {
-                    steps[key]++;
-                } else {
-                    steps[key] = 1;
-                    positions[key] = graph[positions[key]]
+            if(positions[key] != 'player') {
+                if(key == 'w' && rand(0, move_chance) == Math.floor(move_chance/2)) {
+                    if(steps[key] < 2) {
+                        steps[key]++;
+                    } else {
+                        steps[key] = 1;
+                        positions[key] = graph[positions[key]]
+                    }
+                    if(active_camera == positions[key]) {
+                        addition = ''
+                        addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                    } else {
+                        addition = '';
+                        Object.keys(positions).forEach((key)=>{
+                            if(positions[key] == active_camera) {
+                                addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                            }
+                        })
+                        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                    }
+                    if(positions['w'] == 'player') {
+                        setTimeout(() => {
+                            if(positions['w'] == 'player') {
+                                over('wednesday');
+                            }
+                        }, wednesday_wait_time*1000)
+                    }
                 }
-                if(active_camera == positions[key]) {
-                    addition = ''
-                    addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
-                    document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
-                } else {
-                    addition = '';
-                    Object.keys(positions).forEach((key)=>{
-                        if(positions[key] == active_camera) {
-                            addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
-                        }
-                    })
-                    document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
-                }
-                if(positions['w'] == 'player') {
-                    setTimeout(() => {
-                        if(positions['w'] == 'player') {
-                            over();
-                        }
-                    }, wait_time*1000)
-                }
-                if(positions['t'] == 'player') {
-                    setTimeout(() => {
-                        if(!vent_status) {
-                            over();
-                        } else {
-                            play('sounds/thing_run.mp3')
-                            positions['t'] = 'k1'
-                            steps['t'] = 1
-                        }
-                    }, thing_wait_time * 1000)
+                if(key == 't' && rand(0, thing_move_chance) == Math.floor(thing_move_chance/2)) {
+                    if(steps[key] < 2) {
+                        steps[key]++;
+                    } else {
+                        steps[key] = 1;
+                        positions[key] = graph[positions[key]]
+                    }
+                    if(active_camera == positions[key]) {
+                        addition = ''
+                        addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                    } else {
+                        addition = '';
+                        Object.keys(positions).forEach((key)=>{
+                            if(positions[key] == active_camera) {
+                                addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                            }
+                        })
+                        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                    }
+                    if(positions['t'] == 'player') {
+                        setTimeout(() => {
+                            if(!vent_status) {
+                                over('thing');
+                            } else {
+                                play('sounds/thing_run.mp3')
+                                positions['t'] = 'k1'
+                                steps['t'] = 1
+                            }
+                        }, thing_wait_time * 1000)
+                    }
                 }
             }
         })
@@ -142,19 +167,46 @@ function start() {
             dead_soul = true;
             setTimeout(() => {
                 if(dead_soul) {
-                    over();
+                    over('dead soul');
                 }
             }, dead_soul_wait_time * 1000)
         }
     }, 3000);
 }
-function over() {
+function over(screamer) {
     clearInterval(time_walk)
     clearInterval(vallet_check)
     clearInterval(loop)
     document.getElementById('atmosphere').remove()
-    document.body.style.display = 'none';
-}
+    play('sounds/over.mp3');
+    setTimeout(() => {
+        play('sounds/over_menu.mp3');
+        document.querySelector('.over-menu').classList.remove('none');
+        setTimeout(() => {
+            document.querySelector('.over-menu-flash').classList.remove('flash-out')
+        }, 1000)
+        setTimeout(() => {
+            location.reload()
+        }, 6000)
+    }, 400)
+    switch(screamer) {
+        case 'wednesday':
+            document.querySelector('.hint').innerHTML = 'Не забывайте светить на Уенсдей!'
+            document.querySelector('.scream-wednesday').classList.remove('dead_soul-run')
+            break;
+        case 'dead soul':
+            document.querySelector('.hint').innerHTML = 'Светите на мертвеца в коридоре!'
+            document.querySelector('.scream-wednesday').style.background = `url('images/dead_soul.png') center / cover`;
+            document.querySelector('.scream-wednesday').classList.remove('dead_soul-run')
+            break;
+        case 'thing':
+            document.querySelector('.scream-thing').classList.remove('hidden_thing')
+            document.querySelector('.hint').innerHTML = 'Закрывайте вентиляцию перед вещью!'
+            break
+        default:
+            break;
+    }
+} 
 
 document.querySelectorAll('.moveSensor').forEach((e)=>{
     e.addEventListener('click', (f)=>{

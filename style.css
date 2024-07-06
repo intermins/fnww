@@ -202,7 +202,7 @@ body {
     background-position: center;
     background-size: 80%;
     background-repeat: no-repeat;
-    transition: 0.4s;
+    transition: 0.1s;
     z-index: 25;
     cursor: pointer;
 }
@@ -219,7 +219,7 @@ body {
     background: rgb(0, 0, 0);
     box-shadow: inset 0px 0px 1000px rgb(0, 0, 0);
     transition: 0.4s;
-    background: url('images/camera_decor.png') center left / 50% no-repeat, url('images/k1.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover;
+    background: url('images/camera_decor.png') center left / 50% no-repeat, url('images/k3.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover;
 }
 .camera-close {
     transform: translateX(100%);
@@ -359,6 +359,58 @@ body {
 .dead_soul-run {
     opacity: 0;
     transform: translateY(100%);
+}
+.scream-wednesday {
+    width: 1500px;
+    height: 1200px;
+    background-image: url('images/wednesday.png');
+    background-position: top left;
+    background-size: 100% auto;
+    position: absolute;
+    bottom: 0;
+    margin: 0 auto;
+    left: calc(50% - 750px);
+    transition: 0.2s;
+    z-index: 60;
+}
+.over-menu-flash {
+    width: 100vw;
+    height: 100vh;
+    transition: 3s;
+    background: white;
+    opacity: 0;
+    transition: 3s;
+    z-index: 85;
+}
+.flash-out {
+    opacity: 1;
+}
+.over-menu {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+    z-index: 80;
+    background: red;
+    background: url('images/over.png') center / cover;
+}
+.hint {
+    position: absolute;
+    bottom: 20px;
+    width: 100vw;
+    text-align: center;
+    font-size: 40px;
+    color: white;
+}
+.scream-thing {
+    width: 1200px;
+    height: 1200px;
+    background: url('images/scream_thing.png') center / cover;
+    transition: 0.4s linear;
+    position: absolute;
+    transform: scale(1);
+}
+.hidden_thing {
+    transform: scale(0);
 }
 
 @keyframes flash {

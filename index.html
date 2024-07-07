@@ -44,10 +44,16 @@
     </div>
 
     <div class="start">
-        12 AM
-        <br>
-        <br>
-        Night 1
+        <span>12 AM</span>
+        <div class="nights-selector">
+            <div id="night-back" class="select"><</div>
+            <span id="night-res">Night 1</span>
+            <div id="night-forward" class="select">></div>
+        </div>
+        <div class="tutorial-toggle">
+            <span>Tutorial: </span>
+            <div id="tutorials">ON</div>
+        </div>
         <div class="start-btn" onclick="start()">Start</div>
     </div>
 
@@ -75,6 +81,7 @@
         <div class="bar" id="oxygen_bar"></div>
     </div>
 
+    <script src="nights_config.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

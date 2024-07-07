@@ -167,9 +167,16 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
+    flex-direction: column;
+    gap: 30px;
     color: white;
     font-size: 60px;
     z-index: 40;
+    text-align: center;
+}
+.nights-selector {
+    display: flex;
+    gap: 30px;
 }
 .out {
     opacity: 0;
@@ -421,6 +428,31 @@ body {
 }
 .fade-out {
     opacity: 0;
+}
+.select {
+    cursor: pointer;
+    transition: 0.3s;
+}
+.select:hover {
+    color: grey;
+}
+#night-res {
+    width: 300px;
+}
+#tutorials {
+    padding: 10px;
+    border: 2px solid white;
+    border-radius: 10px; 
+    cursor: pointer;
+}
+#tutorials:hover {
+    background: white;
+    color: black;
+}
+.tutorial-toggle {
+    display: flex;
+    gap: 30px;
+    align-items: center;
 }
 
 @keyframes flash {

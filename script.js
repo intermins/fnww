@@ -23,6 +23,8 @@ let phoneguy_wait = 2;
 
 let win = false;
 
+let night_index = 0;
+
 let positions = {};
 let steps = {};
 
@@ -53,6 +55,24 @@ let loop;
 document.getElementById('count_flash').innerHTML = flash_count;
 
 let time = 0;
+
+function set_night() {
+    setting_key = nights[nights_keys[night_index]];
+    flash_count = setting_key[0];
+    move_chance = setting_key[1];
+    thing_move_chance = setting_key[2];
+    wednesday_wait_time = setting_key[3];
+    thing_wait_time = setting_key[4];
+    dead_soul_chance = setting_key[5];
+    dead_soul_wait_time = setting_key[6];
+    phoneguy_move_chance = setting_key[7];
+    phoneguy_wait_time = setting_key[8];
+    phoneguy_wait = setting_key[9];
+    document.getElementById('count_flash').innerHTML = flash_count;
+    document.getElementById('night-res').innerHTML = nights_keys[night_index]
+}
+
+set_night()
 
 function play(src) {
     let sound = new Audio();
@@ -90,6 +110,9 @@ function start() {
             clearInterval(vallet_check)
             clearInterval(loop)
             win = true;
+            setTimeout(() => {
+                location.reload()
+            }, 6000)
         }
     }, 75000);
     vallet_check = setInterval(() => {
@@ -140,7 +163,7 @@ function start() {
                         }, wednesday_wait_time*1000)
                     }
                 }
-                if(key == 'p' && rand(0, phoneguy_move_chance) == Math.floor(phoneguy_move_chance/2) && phoneguy_wait >= time) {
+                if(key == 'p' && rand(0, phoneguy_move_chance) == Math.floor(phoneguy_move_chance/2) && phoneguy_wait <= time) {
                     if(steps[key] < 2) {
                         steps[key]++;
                     } else {
@@ -409,4 +432,32 @@ document.querySelectorAll('.camera-btn').forEach((e) => {
         })
         document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
     })
+})
+
+document.querySelectorAll('.select').forEach((key) => {
+    key.addEventListener('click', (e)=>{
+        if(e.target.id == 'night-back') {
+            night_index--;
+            if(night_index < 0) {
+                night_index = nights_keys.length-1;
+            }
+        } else {
+            night_index++;
+            if(night_index > nights_keys.length-1) {
+                night_index = 0;
+            }
+        }
+        set_night()
+    })
+})
+document.getElementById('tutorials').addEventListener('click', (e)=>{
+    if(tutorial) {
+        tutorial = false;
+        vent_tutorial = false;
+        e.target.innerHTML = 'OFF'
+    } else {
+        tutorial = true;
+        vent_tutorial = true;
+        e.target.innerHTML = 'ON'
+    }
 })

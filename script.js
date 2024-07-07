@@ -229,9 +229,17 @@ function start() {
         if(status && rand(0, dead_soul_chance) == Math.floor(dead_soul_chance/2) && !dead_soul) {
             document.querySelector('.dead_soul').classList.remove('none');
             dead_soul = true;
+            let soul = document.createElement('audio');
+            soul.preload = 'auto';
+            soul.loop = 'true';
+            soul.src = 'sounds/dead_soul.mp3'
+            soul.id = 'soul';
+            soul.play();
+            document.body.appendChild(soul)
             setTimeout(() => {
                 if(dead_soul && !win) {
                     over('dead soul');
+                    document.getElementById('soul').remove();
                 }
             }, dead_soul_wait_time * 1000)
         }
@@ -325,6 +333,7 @@ document.addEventListener('keydown', (e)=>{
                 }
                 if(dead_soul) {
                     dead_soul = false;
+                    document.getElementById('soul').remove();
                     play('sounds/scream.mp3');
                     setTimeout(() => {
                         document.querySelector('.dead_soul').classList.add('dead_soul-run');

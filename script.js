@@ -16,6 +16,10 @@ let thing_wait_time = 8;
 let dead_soul_chance = 35;
 let dead_soul = false;
 let dead_soul_wait_time = 15;
+let phoneguy_move_chance = 15;
+let phoneguy_wait_time = 6;
+let phoneguy_status = false;
+let phoneguy_wait = 2;
 
 let win = false;
 
@@ -26,6 +30,8 @@ positions['w'] = 'k6';
 steps['w'] = 1;
 positions['t'] = 'k1';
 steps['t'] = 1;
+positions['p'] = 'k2';
+steps['p'] = 1;
 
 let graph = {};
 
@@ -134,6 +140,35 @@ function start() {
                         }, wednesday_wait_time*1000)
                     }
                 }
+                if(key == 'p' && rand(0, phoneguy_move_chance) == Math.floor(phoneguy_move_chance/2) && phoneguy_wait >= time) {
+                    if(steps[key] < 2) {
+                        steps[key]++;
+                    } else {
+                        steps[key] = 1;
+                        positions[key] = graph[positions[key]]
+                    }
+                    if(active_camera == positions[key]) {
+                        addition = ''
+                        addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                    } else {
+                        addition = '';
+                        Object.keys(positions).forEach((key)=>{
+                            if(positions[key] == active_camera) {
+                                addition += `url('images/cameras/${key}_${positions[key]}_${steps[key]}.png') center / cover, `
+                            }
+                        })
+                        document.querySelector('.camera').style.background = `url('images/camera_decor.png') center left / 50% no-repeat, ${addition} url('images/${active_camera}.jpg') center / cover no-repeat, url('images/no signal.jpg') center / cover`;
+                    }
+                    if(positions['p'] == 'player') {
+                        phoneguy_status = true;
+                        setTimeout(() => {
+                            positions['p'] = 'k2';
+                            steps['p'] = 1;
+                            phoneguy_status = false;
+                        }, phoneguy_wait_time*1000);
+                    }
+                }
                 if(key == 't' && rand(0, thing_move_chance) == Math.floor(thing_move_chance/2)) {
                     if(steps[key] < 2) {
                         steps[key]++;
@@ -212,6 +247,11 @@ function over(screamer) {
         case 'oxygen':
             document.querySelector('.hint').innerHTML = 'Следите за кислородом!'
             break;
+        case 'phoneguy':
+            document.querySelector('.scream-wednesday').style.background = `url('images/phoneguy.png') center / cover`;
+            document.querySelector('.scream-wednesday').classList.remove('dead_soul-run')
+            document.querySelector('.hint').innerHTML = 'Старайтесь не светить на фонгая!';
+            break;
         default:
             break;
     }
@@ -251,6 +291,15 @@ document.addEventListener('keydown', (e)=>{
         case ' ':
             if(!status && flash_interval && flash_count > 0) {
                 play('sounds/flash.mp3');
+                if(phoneguy_status) {
+                    document.querySelector('.phoneguy-scream').classList.remove('none');
+                    setTimeout(() => {
+                        document.querySelector('.phoneguy-scream').classList.add('fade-out');
+                    }, 400);
+                    setTimeout(() => {
+                        over('phoneguy')
+                    }, 1300)
+                }
                 if(dead_soul) {
                     dead_soul = false;
                     play('sounds/scream.mp3');

@@ -412,6 +412,16 @@ body {
 .hidden_thing {
     transform: scale(0);
 }
+.phoneguy-scream {
+    transform: rotate(180deg) translateY(100px);
+    width: 200px;
+    height: 200px;
+    background: url('images/phoneguy.png') center / auto 100% no-repeat;
+    transition: 0.3s;
+}
+.fade-out {
+    opacity: 0;
+}
 
 @keyframes flash {
     0% {
